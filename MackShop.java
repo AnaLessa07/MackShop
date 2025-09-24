@@ -90,24 +90,22 @@ public class MackShop {
                         buscarVendaEspecifica();
                         break;
                     }
-                    /*
-                     * case 8:
-                     * if (iniciada == false) {
-                     * System.out.
-                     * println("Base nao iniciada, voce deve digitar a opção 1 para comecar");
-                     * break;
-                     * } else {
-                     * reporEstoque();
-                     * break;
-                     * case 9:
-                     * if (iniciada == false) {
-                     * System.out.
-                     * println("Base nao iniciada, voce deve digitar a opção 1 para comecar");
-                     * break;
-                     * } else {
-                     * relatorioEstoqueBaixo();
-                     * break;
-                     */
+                case 8:
+                    if (iniciada == false) {
+                        System.out.println("Base nao iniciada, voce deve digitar a opção 1 para comecar");
+                        break;
+                    } else {
+                        reporEstoque();
+                        break;
+                    }
+                case 9:
+                    if (iniciada == false) {
+                        System.out.println("Base nao iniciada, voce deve digitar a opção 1 para comecar");
+                        break;
+                    } else {
+                        relatorioEstoqueBaixo();
+                        break;
+                    }
                 case 10:
                     System.out.println("\nSAINDO DO SISTEMA. OBRIGADA!");
 
@@ -281,7 +279,8 @@ public class MackShop {
     public static void verHistoricoVendas() {
         for (int i = 0; i < contadorIdPedido; i++) {
             System.out.println("---------- HISTORICO DE VENDA ----------");
-            System.out.printf("Pedido ID: %d - Valor Total: R$ %.2f\n", historicoIdsPedidos[i], historicoValoresPedidos[i]);
+            System.out.printf("Pedido ID: %d - Valor Total: R$ %.2f\n", historicoIdsPedidos[i],
+                    historicoValoresPedidos[i]);
         }
     }
 
@@ -297,14 +296,14 @@ public class MackShop {
         }
     }
 
-    public static void reporEstoque(){
+    public static void reporEstoque() {
         System.out.println("Digite o ID do produto que deseja repor:");
         int idRepor = entrada.nextInt();
         System.out.println("Digite a quantidade do produto que deseja repor:");
         int quantRepor = entrada.nextInt();
 
-        for (int i = 0; i < idsProdutos.length; i++){
-            if (idsProdutos[i] == idRepor){
+        for (int i = 0; i < idsProdutos.length; i++) {
+            if (idsProdutos[i] == idRepor) {
                 estoquesProdutos[i] += quantRepor;
                 System.out.println("Reposição do produto feita");
                 return;
@@ -314,8 +313,8 @@ public class MackShop {
 
     public static void relatorioEstoqueBaixo() {
         System.out.println("----------- Relatorio de estoque baixo ------------------");
-        for (int i = 0; i < idsProdutos.length; i++){
-            if ( estoquesProdutos[i] < 10 ){
+        for (int i = 0; i < idsProdutos.length; i++) {
+            if (estoquesProdutos[i] < 5) {
                 System.out.printf("ID: %d - %s | Estoque: %d\n", idsProdutos[i], nomesProdutos[i], estoquesProdutos[i]);
             }
         }
