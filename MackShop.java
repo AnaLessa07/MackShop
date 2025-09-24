@@ -202,7 +202,7 @@ public class MackShop {
         for (int i = 0; i < contadorVendaAtual; i++) {
             int idProduto = vendaAtualIds[i];
             int qtd = vendaAtualQuantidades[i];
-            totalVenda = qtd * precosProdutos[idProduto - 1];
+            totalVenda += qtd * precosProdutos[idProduto - 1];
 
             estoquesProdutos[idProduto - 1] -= qtd;
 
@@ -252,27 +252,36 @@ public class MackShop {
                 "---------------------------------------------------------------------------------------------");
         double subtotal = 0;
         double total = 0;
-        for (int i = 0; i < contadorVendaAtual; i++) {
-            int idProd = vendaAtualIds[i];
-            int qtd = vendaAtualQuantidades[i];
-            subtotal = qtd * precosProdutos[idProd - 1];
-            total += subtotal;
 
-            System.out.printf("* %-4d | %-20s | %-4d | R$ %-8.2f | R$ %-10.2f                         *\n",
-                    idProd, nomesProdutos[idProd - 1], qtd, precosProdutos[idProd - 1], subtotal);
+        // Se o pedido for o atual (o último gerado), imprime dos arrays de vendaAtual
+        if (idPedido == proximoIdPedido - 1) {
+            for (int i = 0; i < contadorVendaAtual; i++) {
+                int idProd = vendaAtualIds[i];
+                int qtd = vendaAtualQuantidades[i];
+                subtotal = qtd * precosProdutos[idProd - 1];
+                total += subtotal;
+
+                System.out.printf("* %-4d | %-20s | %-4d | R$ %-8.2f | R$ %-10.2f                         *\n", idProd, nomesProdutos[idProd - 1], qtd, precosProdutos[idProd - 1], subtotal);
+            }
+        } else {
+            // Caso contrário, busca os itens no histórico
+            for (int i = 0; i < contadorHistorico; i++) {
+                if (historicoItensVendidos[i][0] == idPedido) {
+                    int idProd = historicoItensVendidos[i][1];
+                    int qtd = historicoItensVendidos[i][2];
+                    subtotal = qtd * precosProdutos[idProd - 1];
+                    total += subtotal;
+
+                    System.out.printf("* %-4d | %-20s | %-4d | R$ %-8.2f | R$ %-10.2f                         *\n", idProd, nomesProdutos[idProd - 1], qtd, precosProdutos[idProd - 1], subtotal);
+                }
+            }
         }
-        System.out.println(
-                "---------------------------------------------------------------------------------------------");
-        System.out.printf(
-                "* SUBTOTAL: R$ %.2f                                                                       *\n", total);
-        System.out.printf(
-                "* TOTAL: R$ %.2f                                                                          *\n", total);
-        System.out.println(
-                "********************************************************************************************");
-        System.out.println(
-                "* OBRIGADO PELA PREFERÊNCIA! VOLTE SEMPRE!                                                  *");
-        System.out.println(
-                "*********************************************************************************************\n");
+          System.out.println("---------------------------------------------------------------------------------------------");
+          System.out.printf("* SUBTOTAL: R$ %.2f                                                                       *\n",total);
+          System.out.printf("* TOTAL: R$ %.2f                                                                          *\n",total);
+          System.out.println("********************************************************************************************");
+          System.out.println("* OBRIGADO PELA PREFERÊNCIA! VOLTE SEMPRE!                                                  *");
+          System.out.println("*********************************************************************************************\n");
 
     }
 
@@ -285,15 +294,18 @@ public class MackShop {
     }
 
     public static void buscarVendaEspecifica() {
+        double total = 0;
         System.out.println("Digite o ID do pedido que deseja buscar:");
         int idSolicitado = entrada.nextInt();
 
-        for (int i = 0; i < historicoIdsPedidos.length; i++) {
-            if (historicoIdsPedidos[i] == idSolicitado) {
-                imprimirNotaFiscal(idSolicitado, historicoValoresPedidos[i]);
-                break;
+        for (int i = 0; i < contadorHistorico; i++) {
+            if (historicoItensVendidos[i][0] == idSolicitado) {
+                int idProd = historicoItensVendidos[i][1];
+                int qtd = historicoItensVendidos[i][2];
+                total += qtd * precosProdutos[idProd - 1];
             }
         }
+        imprimirNotaFiscal(idSolicitado, total);
     }
 
     public static void reporEstoque() {
