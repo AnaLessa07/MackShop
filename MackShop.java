@@ -297,14 +297,6 @@ public class MackShop {
         double total = 0;
         System.out.println("Digite o ID do pedido que deseja buscar:");
         int idSolicitado = entrada.nextInt();
-
-        for (int i = 0; i < contadorHistorico; i++) {
-            if (historicoItensVendidos[i][0] == idSolicitado) {
-                int idProd = historicoItensVendidos[i][1];
-                int qtd = historicoItensVendidos[i][2];
-                total += qtd * precosProdutos[idProd - 1];
-            }
-        }
         imprimirNotaFiscal(idSolicitado, total);
     }
 
