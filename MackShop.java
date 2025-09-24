@@ -21,6 +21,7 @@ public class MackShop {
     // Contadores
     static int contadorVendaAtual = 0;
     static int contadorHistorico = 0;
+    static int contadorIdPedido = 0;
 
     static int proximoIdPedido = 1001;
 
@@ -72,17 +73,38 @@ public class MackShop {
                         finalizarVenda();
                         break;
                     }
+
+                case 6:
+                    if (iniciada == false) {
+                        System.out.println("Base nao iniciada, voce deve digitar a opção 1 para comecar");
+                        break;
+                    } else {
+                        verHistoricoVendas();
+                        break;
+                    }
+                case 7:
+                    if (iniciada == false) {
+                        System.out.println("Base nao iniciada, voce deve digitar a opção 1 para comecar");
+                        break;
+                    } else {
+                        buscarVendaEspecifica();
+                        break;
+                    }
                     /*
-                     * case 6:
-                     * verHistoricoVendas();
-                     * break;
-                     * case 7:
-                     * buscarVendaEspecifica();
-                     * break;
                      * case 8:
+                     * if (iniciada == false) {
+                     * System.out.
+                     * println("Base nao iniciada, voce deve digitar a opção 1 para comecar");
+                     * break;
+                     * } else {
                      * reporEstoque();
                      * break;
                      * case 9:
+                     * if (iniciada == false) {
+                     * System.out.
+                     * println("Base nao iniciada, voce deve digitar a opção 1 para comecar");
+                     * break;
+                     * } else {
                      * relatorioEstoqueBaixo();
                      * break;
                      */
@@ -182,8 +204,7 @@ public class MackShop {
         for (int i = 0; i < contadorVendaAtual; i++) {
             int idProduto = vendaAtualIds[i];
             int qtd = vendaAtualQuantidades[i];
-            double subtotal = qtd * precosProdutos[idProduto - 1];
-            totalVenda += subtotal;
+            totalVenda = qtd * precosProdutos[idProduto - 1];
 
             estoquesProdutos[idProduto - 1] -= qtd;
 
@@ -197,8 +218,9 @@ public class MackShop {
         // 2. Salva ID e valor total da venda
         historicoIdsPedidos[idPedido - 1001] = idPedido;
         historicoValoresPedidos[idPedido - 1001] = totalVenda;
+        contadorIdPedido++;
 
-        // 3. Imprime nota fiscal
+        // 3. Imprime nota
         imprimirNotaFiscal(idPedido, totalVenda);
 
         // 4. Limpa carrinho
@@ -210,7 +232,7 @@ public class MackShop {
 
     public static void imprimirNotaFiscal(int idPedido, double totalVenda) {
         System.out.println(
-                "*********************************************************************************************");
+                "\n*********************************************************************************************");
         System.out.println(
                 "* MACKSHOP                                                                                  *");
         System.out.println(
@@ -220,7 +242,8 @@ public class MackShop {
         System.out.printf(
                 "* NOTA FISCAL - VENDA AO CONSUMIDOR                                                         *\n");
         System.out.printf(
-                "* Pedido ID: %-30d                                                                          *\n", idPedido);
+                "* Pedido ID: %1d                                                                           *\n",
+                idPedido);
         System.out.println(
                 "* Data de Emissão: 25/09/2025  20:40:00                                                     *");
         System.out.println(
@@ -229,29 +252,59 @@ public class MackShop {
                 "* ID   | DESCRIÇÃO            | QTD  | VL. UNIT.   | VL. TOTAL                              *");
         System.out.println(
                 "---------------------------------------------------------------------------------------------");
-        double valorTotal = 0;
-        double subTotal = 0;
+        double subtotal = 0;
+        double total = 0;
         for (int i = 0; i < contadorVendaAtual; i++) {
             int idProd = vendaAtualIds[i];
             int qtd = vendaAtualQuantidades[i];
-            double valorUnit = precosProdutos[idProd - 1];
-            subTotal = valorUnit * qtd;
-            valorTotal += subTotal;
+            subtotal = qtd * precosProdutos[idProd - 1];
+            total += subtotal;
 
-            System.out.printf("* %-4d | %-20s | %-4d | R$ %-8.2f | R$ %-10.2f                   *\n", idProd, nomesProdutos[idProd - 1], qtd, valorUnit, valorTotal);
+            System.out.printf("* %-4d | %-20s | %-4d | R$ %-8.2f | R$ %-10.2f                         *\n",
+                    idProd, nomesProdutos[idProd - 1], qtd, precosProdutos[idProd - 1], subtotal);
         }
         System.out.println(
                 "---------------------------------------------------------------------------------------------");
         System.out.printf(
-                "* SUBTOTAL: R$ %.2f                                                                         *\n", subTotal);
+                "* SUBTOTAL: R$ %.2f                                                                       *\n", total);
         System.out.printf(
-                "* TOTAL: R$ %.2f                                                                            *\n", valorTotal);
+                "* TOTAL: R$ %.2f                                                                          *\n", total);
         System.out.println(
                 "********************************************************************************************");
         System.out.println(
                 "* OBRIGADO PELA PREFERÊNCIA! VOLTE SEMPRE!                                                  *");
         System.out.println(
-                "*********************************************************************************************");
+                "*********************************************************************************************\n");
+
+    }
+
+    public static void verHistoricoVendas() {
+        for (int i = 0; i < contadorIdPedido; i++) {
+            System.out.println("---------- HISTORICO DE VENDA ----------");
+            System.out.printf("Pedido ID: %d - Valor Total: R$ %.2f\n", historicoIdsPedidos[i], historicoValoresPedidos[i]);
+        }
+    }
+
+    public static void buscarVendaEspecifica() {
+        System.out.println("Digite o ID do pedido que deseja buscar:");
+        int idSolicitado = entrada.nextInt();
+
+        for (int i = 0; i < historicoIdsPedidos.length; i++) {
+            if (historicoIdsPedidos[i] == idSolicitado) {
+                imprimirNotaFiscal(idSolicitado, historicoValoresPedidos[i]);
+                break;
+            }
+        }
+    }
+
+    public static void reporEstoque(){
+        System.out.println("Digite o ID do produto que deseja repor:");
+        int idRepor = entrada.nextInt();
+        System.out.println("Digite a quantidade do produto que deseja repor:");
+        int quantRepor = entrada.nextInt();
+        for (int i = 0; i < idsProdutos.length; i++){
+
+        }
 
     }
 
