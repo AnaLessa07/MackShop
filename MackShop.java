@@ -302,10 +302,23 @@ public class MackShop {
         int idRepor = entrada.nextInt();
         System.out.println("Digite a quantidade do produto que deseja repor:");
         int quantRepor = entrada.nextInt();
+
         for (int i = 0; i < idsProdutos.length; i++){
-
+            if (idsProdutos[i] == idRepor){
+                estoquesProdutos[i] += quantRepor;
+                System.out.println("Reposição do produto feita");
+                return;
+            }
         }
+    }
 
+    public static void relatorioEstoqueBaixo() {
+        System.out.println("----------- Relatorio de estoque baixo ------------------");
+        for (int i = 0; i < idsProdutos.length; i++){
+            if ( estoquesProdutos[i] < 10 ){
+                System.out.printf("ID: %d - %s | Estoque: %d\n", idsProdutos[i], nomesProdutos[i], estoquesProdutos[i]);
+            }
+        }
     }
 
 }
